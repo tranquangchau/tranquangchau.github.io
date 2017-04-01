@@ -1,0 +1,87 @@
+<html>
+<script>
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+function ucFirstAllWords( str )
+{
+    var pieces = str.split(" ");
+    for ( var i = 0; i < pieces.length; i++ )
+    {
+        var j = pieces[i].charAt(0).toUpperCase();
+        pieces[i] = j + pieces[i].substr(1);
+    }
+    return pieces.join(" ");
+}
+//or
+/*
+var str = "hello world";
+str = str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+    return letter.toUpperCase();
+});
+alert(str); //Displays "Hello World"
+*/
+function upTO_CASE(str){
+	return str.toUpperCase();
+}
+function tolower_case(str){
+	return str.toLowerCase();
+}
+
+function getdata(type,at,e){
+	//console.log(document.getElementById(at).value);
+	var string_in = document.getElementById(at).value;
+	var string_out='';
+	switch (type){
+		case 1:
+			string_out = capitalizeFirstLetter(string_in);
+			
+			break;
+		case 2:
+			string_out = ucFirstAllWords(string_in);
+			
+			break;
+		case 3:
+			string_out = upTO_CASE(string_in);
+			
+			break;
+		case 4:
+			string_out = tolower_case(string_in);
+			
+			break;
+		default: 
+			break;
+	}
+	//string_out = capitalizeFirstLetter(string_in);
+	e.value = string_out;
+}
+
+//console.log(capitalizeFirstLetter("ran quag chau"));
+//console.log(ucFirstAllWords("ran quag chau"));
+//console.log(upTO_CASE("ran quag chau"));
+//console.log(tolower_case("Tan Quag chau"));
+</script>
+<h1>VS Text</h1>
+
+<label>capitalizeFirstLetter: They're people of great learning English. -> They're people of great learning english.</label>
+<textarea id="in1"></textarea>
+<textarea onclick="getdata(1,'in1',this)"></textarea>
+
+<label>ucFirstAllWords: They're people of great learning English. ->They're People Of Great Learning English.</label>
+<textarea id="in2"></textarea>
+<textarea onclick="getdata(2,'in2',this)"></textarea>
+
+<label>upTO_CASE: They're people of great learning English. -> THEY'RE PEOPLE OF GREAT LEARNING ENGLISH.</label>
+<textarea id="in3"></textarea>
+<textarea onclick="getdata(3,'in3',this)"></textarea>
+
+<label>tolower_case: They're people of great learning English. ->they're people of great learning english</label>
+<textarea id="in4"></textarea>
+<textarea onclick="getdata(4,'in4',this)"></textarea>
+
+<style>
+label{display:inherit;padding-top: 22px;padding-bottom: 8px;}
+textarea{width: 350px;}
+</style>
+</html>
