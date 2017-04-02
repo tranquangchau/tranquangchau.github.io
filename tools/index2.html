@@ -1,0 +1,41 @@
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script>
+//rung();
+function rung(){
+/*
+	$.ajax(
+	  { url: "http://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site",
+		//data: $data, 
+		dataType: 'jsonp',
+		callback: function(returnData) { 
+			//console.log("'"+returnData+"'");
+			console.log(returnData = returnData.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, ''));
+		  // Jquery find <mytag attribute="foo">...</mytag> and store it in mydata
+		  //var mydata = $(returnData).find('mytag[attribute=foo]');
+		  // Insert into current page to somewhere with class="after-me"
+		  //$('.after-me').html(mydata);
+	   }
+	});
+*/	
+	var url = 'http://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site'; // website you want to scrape
+	var yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + url + '"') + '&format=json&callback=?';  
+	$.getJSON(yql,function(data){
+		if (data.results[0]){  
+			console.log(data = data.results[0].replace(/<script[^>]*>[\s\S]*?<\/script>/gi, ''));  // The scraped data (the whole webpage)
+		}
+	});
+}
+
+console.log(getSourceAsDOM("http://stackoverflow.com/questions/3871358/get-all-the-href-attributes-of-a-web-site"));
+
+function getSourceAsDOM(url)
+{
+    xmlhttp=new XMLHttpRequest();
+    xmlhttp.open("GET",url,false);
+    xmlhttp.send();
+    parser=new DOMParser();
+    return parser.parseFromString(xmlhttp.responseText,"text/html");      
+}
+
+</script>
