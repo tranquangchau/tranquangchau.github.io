@@ -1,0 +1,568 @@
+
+<!-- saved from url=(0036)http://iblogbox.com/devtools/crypto/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+			
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Crypto Tools</title>
+<meta name="description" content="">
+<meta name="keywords" content="CRC32, MD5, SHA, HMAC, Hash, DES, Triple DES, Encrypt, Decrypt, AES, MARC4, RC4, Rabbit, Crypto">
+<style>
+* {
+    font-family: Arial, Helvetica, sans-serif; /*Trebuchet MS, Tahoma, Verdana*/
+    font-size:14px;
+}
+/*.tabletext td{
+    font-size:13px;
+}*/
+.inputtext {
+  width:550px;
+}	
+.inputtext2 {
+  width:270px;
+}	
+.defaultwidth {
+  width:720px;
+}
+.textareatext {
+  width:720px;
+  height:100px;
+}	
+.textareatext2 {
+  width:600px;
+  height:80px;
+}	
+/*.btntext {
+  font-size:13px;
+}*/
+#tab_select a{
+	color:#00E;
+}
+</style>	
+
+</script><script type="text/javascript" src="./js/basic.js"></script>	
+<script type="text/javascript" src="./js/2.5.3-crypto-sha1-hmac-pbkdf2-blockmodes-aes.js"></script>
+<script type="text/javascript" src="./js/2.5.3-crypto-sha1-hmac-pbkdf2-marc4.js"></script>
+<script type="text/javascript" src="./js/2.5.3-crypto-sha1-hmac-pbkdf2-rabbit.js"></script>
+<script type="text/javascript" src="./js/2.5.3-crypto-md5-hmac.js"></script>
+<script type="text/javascript" src="./js/2.5.3-crypto-sha1-hmac.js"></script>
+<script type="text/javascript" src="./js/2.5.3-crypto-sha256-hmac.js"></script>
+
+<script>
+var Base64 = { 
+	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+ 
+	encode : function (input,isutf8) {
+		var output = "";
+		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+		var i = 0;
+ 		
+ 		if (isutf8) input = Base64._utf8_encode(input);
+ 
+		while (i < input.length) {
+ 
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+ 
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+ 
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+ 
+			output = output +
+			this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+			this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+ 
+		}
+ 
+		return output;
+	},
+ 
+	decode : function (input,isutf8) {
+		var output = "";
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+ 
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+ 
+		while (i < input.length) {
+ 
+			enc1 = this._keyStr.indexOf(input.charAt(i++));
+			enc2 = this._keyStr.indexOf(input.charAt(i++));
+			enc3 = this._keyStr.indexOf(input.charAt(i++));
+			enc4 = this._keyStr.indexOf(input.charAt(i++));
+ 
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+ 
+			output = output + String.fromCharCode(chr1);
+ 
+			if (enc3 != 64) {
+				output = output + String.fromCharCode(chr2);
+			}
+			if (enc4 != 64) {
+				output = output + String.fromCharCode(chr3);
+			}
+ 
+		}
+ 		
+ 		if (isutf8) output = Base64._utf8_decode(output);
+ 
+		return output;
+ 
+	},
+ 
+	_utf8_encode : function (string) {
+		string = string.replace(/\r\n/g,"\n");
+		var utftext = "";
+ 
+		for (var n = 0; n < string.length; n++) {
+ 
+			var c = string.charCodeAt(n);
+ 
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+ 
+		}
+ 
+		return utftext;
+	},
+ 
+	_utf8_decode : function (utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+ 
+		while ( i < utftext.length ) {
+ 
+			c = utftext.charCodeAt(i);
+ 
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			}
+			else if((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i+1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			}
+			else {
+				c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+ 
+		}
+ 
+		return string;
+	}
+ 
+}
+/*
+function rc4encrypt(key, pt, b64) {
+	s = new Array();
+	for (var i=0; i<256; i++) {
+		s[i] = i;
+	}
+	var j = 0;
+	var x;
+	for (i=0; i<256; i++) {
+		j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+		x = s[i];
+		s[i] = s[j];
+		s[j] = x;
+	}
+	i = 0;
+	j = 0;
+	var ct = '';
+	for (var y=0; y<pt.length; y++) {
+		i = (i + 1) % 256;
+		j = (j + s[i]) % 256;
+		x = s[i];
+		s[i] = s[j];
+		s[j] = x;
+		ct += String.fromCharCode(pt.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+	}
+	if (b64)
+		return Base64.encode(ct);
+	else
+		return ct;
+}
+
+function rc4decrypt(key, ct, b64) {
+	if (b64)
+		ct=Base64.decode(ct);
+	return rc4encrypt(key, ct);
+}
+*/
+function proc_inject_script(s){
+	var o = document.createElement('scri' + 'pt');
+	o.setAttribute('src', s);
+	o.setAttribute('type', 'text/javascript');
+	document.body.appendChild(o);
+}
+
+var g_encrypt_loaded=false;
+var g_encrypt_interval;
+function proc_hash_encode(){
+	if (!g_encrypt_loaded){
+		g_encrypt_loaded=true;
+		proc_inject_script('js/encrypt.js?t=2');
+		g_encrypt_interval=setInterval(function(){
+			if (window.b64_md5) {
+				clearInterval(g_encrypt_interval);
+				proc_hash_encode();
+			}
+		},200);
+		return;
+	}
+
+	var s=_getid('hash_source').value;
+
+	_getid('hash_crc32').value=get_crc32(s);
+	_getid('hash_md5').value=b64_md5(s);	
+			
+	var shaObj = new jsSHA(s, 'ASCII');
+	_getid('hash_sha1').value=shaObj.getHMAC('abcdef', 'ASCII', 'SHA-1', "HEX");		
+	_getid('hash_sha224').value=shaObj.getHMAC('abcdef', 'ASCII', 'SHA-224', "HEX");		
+	_getid('hash_sha256').value=shaObj.getHMAC('abcdef', 'ASCII', 'SHA-256', "HEX");		
+	_getid('hash_sha384').value=shaObj.getHMAC('abcdef', 'ASCII', 'SHA-384', "HEX");		
+	_getid('hash_sha512').value=shaObj.getHMAC('abcdef', 'ASCII', 'SHA-512', "HEX");		
+}
+
+function proc_hash_clear(){
+	var b=_getid('div_hash').getElementsByTagName('*');
+	for (var i = 0 ; i < b.length ; i++) {
+		if ((b[i].type=='text') || (b[i].type=='textarea')){
+			b[i].value='';
+		}
+	}	
+}
+
+function proc_rc4_encrypt(){
+	var s=_getid('rc4_source').value;
+	var keys=_getid('rc4_key').value;
+
+	_getid('rc4_target_aes').value=Crypto.AES.encrypt(s, keys);
+	_getid('rc4_target_marc4').value=Crypto.MARC4.encrypt(s, keys);
+	//_getid('rc4_target_rc4').value=rc4encrypt(keys,s,true);
+	_getid('rc4_target_rabbit').value=Crypto.Rabbit.encrypt(s, keys);
+}
+
+function proc_rc4_decrypt(a){
+	var s=_getid('rc4_target_'+a).value;
+	var s1='';
+	var keys=_getid('rc4_key').value;
+	
+	try{
+		if (a=='rc4'){
+			//s1=rc4decrypt(keys,s,true);
+		} else if (a=='aes'){
+			s1=Crypto.AES.decrypt(s, keys);		
+		} else if (a=='marc4'){
+			s1=Crypto.MARC4.decrypt(s, keys);
+		} else if (a=='rabbit'){
+			s1=Crypto.Rabbit.decrypt(s, keys);
+		}	
+	}catch(err){
+		s1="";
+		alert("Decrypt Error!!\n\n"+err);
+	}
+	
+	_getid('rc4_source').value=s1;
+}
+
+function proc_hmac_encode(){
+	var s=_getid('hmac_source').value;
+	var keys=_getid('hmac_key').value;
+	
+	_getid('hmac_md5').value=Crypto.HMAC(Crypto.MD5, s, keys);
+	_getid('hmac_sha1').value=Crypto.HMAC(Crypto.SHA1, s, keys);
+	_getid('hmac_sha256').value=Crypto.HMAC(Crypto.SHA256, s, keys);	
+}
+
+function proc_hmac_clear(){
+	var b=_getid('div_hmac').getElementsByTagName('*');
+	for (var i = 0 ; i < b.length ; i++) {
+		if ((b[i].type=='text') || (b[i].type=='textarea')){
+			b[i].value='';
+		}
+	}	
+}
+
+var g_des_loaded=false;
+var g_des_interval;
+function proc_des_start(kind){
+	if (!g_des_loaded){
+		g_des_loaded=true;
+		proc_inject_script('js/des.js');
+		g_des_interval=setInterval(function(){
+			if (window.des) {
+				clearInterval(g_des_interval);
+				proc_des_start(kind);
+			}
+		},200);
+		return;
+	}
+	
+	if (kind==0){
+		var s=_getid('des_source').value;
+		if (_getid('des_utf8').checked) s=Base64.encode(s,true);	
+		
+		if (_getid('des_key').value==''){
+			proc_generate_key('des_key',192);
+		}
+		
+		var s1=des(chars_from_hex(_getid('des_key').value), s, 1, 0);
+		_getid('des_target').value=hex_from_chars(s1);
+	} else {
+		var s=des(chars_from_hex(_getid('des_key').value), chars_from_hex(_getid('des_target').value), 0, 0);
+		if (_getid('des_utf8').checked) s=Base64.decode(s,true);	
+		_getid('des_source').value=s;
+	}
+}
+
+function proc_generate_key(t,bit){
+	if (!g_des_loaded){
+		g_des_loaded=true;
+		proc_inject_script('js/des.js');
+		g_des_interval=setInterval(function(){
+			if (window.des) {
+				clearInterval(g_des_interval);
+				proc_generate_key(t,bit);
+			}
+		},200);
+		return;
+	}
+	
+	var s=Generate_key();
+	s=s.slice(0,bit/4);
+	_getid(t).value=s;
+}
+
+function proc_show(id){
+	setCookie('c_crypto_selecttab',id);			
+	
+	_getid('div_hash').style.display='none';
+	_getid('div_hmac').style.display='none';
+	_getid('div_rc4').style.display='none';
+	_getid('div_des').style.display='none';
+	
+	var a=document.getElementById(id);
+	if (a){
+		a.style.display='';
+		var b=a.getElementsByTagName('*');
+		for (var i = 0 ; i < b.length ; i++) {
+			if ((b[i].type=='text') || (b[i].type=='textarea')){
+				b[i].focus();
+				break;
+			}
+		}
+	}
+	
+	var a=document.getElementById('tab_select');
+	if (a){
+		var b=a.getElementsByTagName('a');
+		for (var i = 0 ; i < b.length ; i++) {
+			b[i].innerHTML=_getinnertext(b[i]);
+		}
+	}
+		
+	var f=document.getElementById('tab_'+id);
+	if (f) f.innerHTML='<b>'+_getinnertext(f)+'<b>';
+}
+
+var g_donotsave=false;	
+function clearstorage(){
+	if (!window.localStorage || !window.JSON) {
+		alert('This browser is not supported. (HTML5 localStorage)');
+		return;	
+	}
+	var answer = confirm('All the configuration information stored on local storage will be cleared. and It will be set as the default values.\n\nDo you want to clear all the configuration information stored?');
+	if (!answer) return;
+	localStorage['crypto_tools_config']='{}';
+	g_donotsave=true;
+	alert('All the configuration information is cleared.\nThis page will be reloaded.');
+	location.href=location.href;
+}
+
+function init(){
+	var id=getCookie('c_crypto_selecttab');
+	if (id=='') id="div_hash";
+	var a=document.getElementById('tab_'+id);
+	if (!a) id="div_hash";	
+	proc_show(id);
+}
+</script>	
+
+</head>
+<body topmargin="6" leftmargin="35" onload="init();" onunload="">
+
+<style>
+.linktext{
+	color:#00C;
+	line-height:130%;
+}	
+a.linktext:hover{color:red;}
+
+.tabletext2 td{
+    font-size:14px;
+}
+</style>	
+
+<table width="1100" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr><td>	
+
+</td></tr></tbody></table>
+
+
+
+
+
+<table border="0" width="900" cellpadding="5" class="tabletext">
+<tbody><tr><td bgcolor="#E1F3DA">
+<div id="tab_select">	
+<a id="tab_div_hash" href="javascript:void(0)" onclick="proc_show(&quot;div_hash&quot;)"><b>CRC32,MD5,SHA Hash<b></b></b></a>&nbsp;&nbsp;
+<a id="tab_div_hmac" href="javascript:void(0)" onclick="proc_show(&quot;div_hmac&quot;)">HMAC Hash</a>&nbsp;&nbsp;
+<a id="tab_div_des" href="javascript:void(0)" onclick="proc_show(&quot;div_des&quot;)">DES Encrypt,Decrypt</a>&nbsp;&nbsp;
+<a id="tab_div_rc4" href="javascript:void(0)" onclick="proc_show(&quot;div_rc4&quot;)">AES,MARC4,Rabbit (Crypto)</a>&nbsp;&nbsp;
+</div>
+
+</td></tr></tbody></table>
+
+<table border="0" width="850" class="tabletext">
+<tbody><tr><td valign="top">
+
+<div id="div_hash">
+<textarea id="hash_source" class="textareatext" spellcheck="false"></textarea>
+<br>
+<button onclick="proc_hash_encode()"><font class="btntext">Make hash</font></button>
+<button onclick="proc_hash_clear()"><font class="btntext">Clear</font></button>
+<br>
+
+<table>
+<tbody><tr><td>CRC32</td><td><input type="text" id="hash_crc32" class="inputtext" spellcheck="false">
+</td></tr><tr><td>MD5</td><td><input type="text" id="hash_md5" class="inputtext" spellcheck="false">
+</td></tr><tr><td>SHA-1</td><td><input type="text" id="hash_sha1" class="inputtext" spellcheck="false">
+</td></tr><tr><td>SHA-224</td><td><input type="text" id="hash_sha224" class="inputtext" spellcheck="false">
+</td></tr><tr><td>SHA-256</td><td><input type="text" id="hash_sha256" class="inputtext" spellcheck="false">
+</td></tr><tr><td>SHA-384</td><td><input type="text" id="hash_sha384" class="inputtext" spellcheck="false">
+</td></tr><tr><td>SHA-512</td><td><input type="text" id="hash_sha512" class="inputtext" spellcheck="false">
+</td></tr></tbody></table>
+
+<br>
+<font style="font-size:15px"><b>What is a CRC32?</b></font><br>
+CRC32 is one of hash functions based on on the "polynomial" division idea. The CRC is acronym for Cyclic Redundancy Code (other variants instead "Code" is "Check" and "Checksum") algorithm. The number 32 is specifying the size of resulting hash value (checksum) - 32 bits. The checksum is used to detect errors after transmission or storage of any piece of information.
+<br><br>
+<font style="font-size:15px"><b>What is a MD5?</b></font><br>
+The MD5 Message-Digest Algorithm is a widely used cryptographic hash function that produces a 128-bit (16-byte) hash value. Specified in RFC 1321, MD5 has been employed in a wide variety of security applications, and is also commonly used to check data integrity. MD5 was designed by Ron Rivest in 1991 to replace an earlier hash function, MD4. An MD5 hash is typically expressed as a 32-digit hexadecimal number.
+<br><br>
+<font style="font-size:15px"><b>What is a SHA-1?</b></font><br>
+In cryptography, SHA-1 is a cryptographic hash function designed by the United States National Security Agency and published by the United States NIST as a U.S. Federal Information Processing Standard. SHA stands for "secure hash algorithm". The three SHA algorithms are structured differently and are distinguished as SHA-0, SHA-1, and SHA-2. SHA-1 is very similar to SHA-0, but corrects an error in the original SHA hash specification that led to significant weaknesses. The SHA-0 algorithm was not adopted by many applications. SHA-2 on the other hand significantly differs from the SHA-1 hash function.
+<br><br>
+<font style="font-size:15px"><b>What is a SHA-2?</b></font><br>
+In cryptography, SHA-2 is a set of cryptographic hash functions (SHA-224, SHA-256, SHA-384, SHA-512) designed by the National Security Agency (NSA) and published in 2001 by the NIST as a U.S. Federal Information Processing Standard. SHA stands for Secure Hash Algorithm. SHA-2 includes a significant number of changes from its predecessor, SHA-1. SHA-2 consists of a set of four hash functions with digests that are 224, 256, 384 or 512 bits.
+In 2005, security flaws were identified in SHA-1, namely that a mathematical weakness might exist, indicating that a stronger hash function would be desirable. Although SHA-2 bears some similarity to the SHA-1 algorithm, these attacks have not been successfully extended to SHA-2.
+A new hash standard, SHA-3, is currently under development; an ongoing NIST hash function competition is scheduled to end with the selection of a winning function in 2012. The SHA-3 algorithm will not be derived from SHA-2.
+
+</div>
+
+<div id="div_hmac" style="display:none">
+<textarea id="hmac_source" class="textareatext" spellcheck="false"></textarea>
+<br>
+<button onclick="proc_hmac_encode()"><font class="btntext">Make hash</font></button>
+<button onclick="proc_hmac_clear()"><font class="btntext">Clear</font></button> Key <input type="text" id="hmac_key" style="width:250px" spellcheck="false">
+<br>
+
+<table>
+<tbody><tr><td>HMAC-MD5</td><td><input type="text" id="hmac_md5" class="inputtext" spellcheck="false">
+</td></tr><tr><td>HMAC-SHA1</td><td><input type="text" id="hmac_sha1" class="inputtext" spellcheck="false">
+</td></tr><tr><td>HMAC-SHA256</td><td><input type="text" id="hmac_sha256" class="inputtext" spellcheck="false">
+</td></tr></tbody></table>
+
+<br>
+<font style="font-size:15px"><b>What is a HMAC?</b></font><br>
+Keyed-hash message authentication codes (HMAC) is a mechanism for message authentication using cryptographic hash functions. HMAC can be used in combination with any iterated cryptographic hash function.
+
+</div>
+
+<div id="div_rc4" style="display:none">
+<textarea id="rc4_source" class="textareatext" spellcheck="false"></textarea>
+<br>
+<button onclick="proc_rc4_encrypt()"><font class="btntext">Encrypt</font></button> Key <input type="text" id="rc4_key" style="width:250px" spellcheck="false">
+<br><br>
+
+<table>
+<tbody><tr><td>AES</td><td><textarea id="rc4_target_aes" class="textareatext2" spellcheck="false"></textarea></td><td><button onclick="proc_rc4_decrypt(&#39;aes&#39;)"><font class="btntext">Decrypt</font></button>
+</td></tr><tr><td>MARC4</td><td><textarea id="rc4_target_marc4" class="textareatext2" spellcheck="false"></textarea></td><td><button onclick="proc_rc4_decrypt(&#39;marc4&#39;)"><font class="btntext">Decrypt</font></button>
+<!--<tr><td>RC4<td><input type=text id='rc4_target_rc4' style='width:550px;'><td><button onClick="proc_rc4_decrypt('rc4')"><font class='btntext'>Decrypt</font></button>//-->
+</td></tr><tr><td>Rabbit</td><td><textarea id="rc4_target_rabbit" class="textareatext2" spellcheck="false"></textarea></td><td><button onclick="proc_rc4_decrypt(&#39;rabbit&#39;)"><font class="btntext">Decrypt</font></button>
+</td></tr></tbody></table>				
+
+<br>
+<font style="font-size:15px"><b>What is a AES?</b></font><br>
+The Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.
+<br><br>
+<font style="font-size:15px"><b>What is a MARC4?</b></font><br>
+MARC4 (Modified Allegedly RC4) is based on RC4, a widely-used stream cipher. RC4 is used in popular protocols such as SSL and WEP. But though it's remarkable for its simplicity and speed, it has weaknesses. Crypto-JS provides a modified version that corrects these weaknesses, but the algorithm's history still doesn't inspire confidence in its security.
+<br><br>
+<font style="font-size:15px"><b>What is a Rabbit?</b></font><br>
+Rabbit is a high-performance stream cipher and a finalist in the eSTREAM Portfolio. It is one of the four designs selected after a 3 1/2-year process where 22 designs were evaluated.
+
+</div>
+
+<div id="div_des" style="display:none">
+<label><input type="checkbox" id="des_utf8">Enable Base64(UTF8)</label><br>
+<br>
+<textarea id="des_source" class="textareatext" spellcheck="false"></textarea>
+<br>
+<button onclick="proc_des_start(0)"><font class="btntext">Encrypt</font></button><br>
+64 bit Key (DES) or 192 bit Key (Triple DES) in Hexadecimal<br>
+Key <input type="text" id="des_key" style="width:450px" spellcheck="false"> 
+<button onclick="proc_generate_key(&#39;des_key&#39;,192)">Generate Key(192bit)</button> <button onclick="proc_generate_key(&#39;des_key&#39;,64)">Generate Key(64bit)</button>
+<br>
+<br>
+<textarea id="des_target" class="textareatext" spellcheck="false"></textarea>
+<br>
+<button onclick="proc_des_start(1)"><font class="btntext">Decrypt</font></button>
+<br>
+<br>
+<font style="font-size:15px"><b>What is a DES?</b></font><br>
+The Data Encryption Standard (DES) is a block cipher that uses shared secret encryption. It was selected by the National Bureau of Standards as an official Federal Information Processing Standard (FIPS) for the United States in 1976 and which has subsequently enjoyed widespread use internationally. It is based on a symmetric-key algorithm that uses a 56-bit key. The algorithm was initially controversial because of classified design elements, a relatively short key length, and suspicions about a National Security Agency (NSA) backdoor. DES consequently came under intense academic scrutiny which motivated the modern understanding of block ciphers and their cryptanalysis.
+<br><br>
+<font style="font-size:15px"><b>What is a Triple DES?</b></font><br>
+In cryptography, Triple DES is the common name for the Triple Data Encryption Algorithm (TDEA or Triple DEA) block cipher, which applies the Data Encryption Standard (DES) cipher algorithm three times to each data block.
+The original DES cipher's key size of 56 bits was generally sufficient when that algorithm was designed, but the availability of increasing computational power made brute-force attacks feasible. Triple DES provides a relatively simple method of increasing the key size of DES to protect against such attacks, without the need to design a completely new block cipher algorithm.
+</div>
+
+
+</td></tr></tbody></table>
+
+
+
+
+<br>
+<br>
+
+
+
+</body></html>
