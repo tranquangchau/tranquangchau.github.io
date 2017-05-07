@@ -27,7 +27,8 @@ li:nth-last-of-type(10n-1) i{
 <h1>test pass in chrome firefox of font_awesome version _4_7_3</h1>
 
 <button onclick="myFunction(1)">Show gird</button>
-<button onclick="myFunction()">Show list</button>
+<button onclick="myFunction(0)">Show list</button>
+<button onclick="myFunction(2)">Zoom</button>
 <p id="show_select" style=" float: right; ">123213<p>
 <hr>
 
@@ -673,19 +674,24 @@ li:nth-last-of-type(10n-1) i{
 
 </ol>
 
-<div id="tag-id">
-</div>
+<div id="tag-id"></div>
+<div id="tag-id-2"></div>
 
 
 
 <script>
 //myFunction();
+var zoom_current=1;
 function myFunction(input)
 {
 	if(input==1){
 		document.getElementById('tag-id').innerHTML = '<style>li{display:initial} span{display:none;}</style>';
-	}else{
+	}else if(input==0){
 		document.getElementById('tag-id').innerHTML ="";
+	}else if(input==2){
+		zoom_current++;
+		if(zoom_current==6){zoom_current=1;}
+		document.getElementById('tag-id-2').innerHTML = '<style>#id_test{zoom:'+zoom_current+';}</style>';
 	}
 /*
    var li_list = document.getElementsByTagName('li');
