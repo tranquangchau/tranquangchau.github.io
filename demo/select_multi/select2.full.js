@@ -927,7 +927,7 @@ S2.define('select2/results',[
 
   Results.prototype.option = function (data) {
     var option = document.createElement('li');
-    option.className = 'select2-results__option';
+    option.className = 'select2-results__option show-false';
 
 	option.onclick = function () {
 			//this.parentElement.removeChild(this);
@@ -936,6 +936,8 @@ S2.define('select2/results',[
 			//alert("run");
 			$( this ).removeClass( "show-true" ).addClass("show-false");
 			$( this ).find( "ul" ).css( "display", "none" );
+			//$( this ).append( "<p>Test</p>" );
+			
 		}else{
 			$( this ).find( "ul" ).css( "display", "block" );
 			//alert("off");
@@ -997,9 +999,8 @@ S2.define('select2/results',[
       for (var c = 0; c < data.children.length; c++) {
         var child = data.children[c];
 
-        var $child = this.option(child);
+        var $child = this.option(child);		
 		
-
         $children.push($child);
       }
 

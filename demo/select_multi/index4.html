@@ -36,12 +36,20 @@
 		display:block!important;
 	}
 	*/	
-	.show-true:after{
-		content: "re";
+	.show-true:before{
+		content: "-";
 		position: relative;
 		float: right;
-		top: -20px;
 	}
+	li ul .show-false:before{
+		content: ""!important;
+	}
+	.show-false:before{
+		content: "+";
+		position: relative;
+		float: right;
+	}
+	
 	
 </style>
 
