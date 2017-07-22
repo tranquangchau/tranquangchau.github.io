@@ -30,7 +30,7 @@
 
 <div class="container s2-docs-container">
   <div class="row">
-    <div class="col-md-9" role="main">
+    <!--div class="col-md-9" role="main">
 
       <section>
 
@@ -43,9 +43,9 @@
 
 </section>
       
-</div>
+</div-->
 
-<select class="js-source-states">
+<select class="js-source-states" multiple="multiple">
     <option value="AZ">Arizona</option>
     <option value="CO">Colorado</option>
     <option value="ID">Idaho</option>
@@ -96,6 +96,21 @@
 
 
 <script type="text/javascript">
+
+$(document).ready(function() {
+  //$(".js-example-basic-single").select2();
+  $(".js-source-states").select2();
+  /*
+  $(".js-source-states").select2({
+	  tags: true,
+	  tokenSeparators: [',', ' ']
+	})
+	*/
+});
+
+
+
+/*
   var $states = $(".js-source-states");
   var statesOptions = $states.html();
   $states.remove();
@@ -141,6 +156,7 @@
     $basicMultiple.select2();
 	     
   });
+  */
 </script>
 
   </body>
