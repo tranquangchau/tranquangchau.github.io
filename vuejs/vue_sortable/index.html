@@ -1,0 +1,20 @@
+
+<link rel="stylesheet" href="style.css">
+
+
+
+<div id="app">
+	<p v-on:click="get_data()">111</p>
+	
+  <div class="root" >
+    <sortable-list lock-axis="y" v-model="items" >
+      <!-- <sortable-item v-for="item in items" :index="item.index" :key="item.index" :item="item.name"></sortable-item> -->
+      <sortable-item v-for="(item, index) in items"  :index="index" :key="index" :item="item.name"></sortable-item>
+    </sortable-list>
+  </div>
+</div>
+
+<script src="vue.js"></script>
+<script src="vue-slicksort.min.js"></script>
+
+<script src="script.js"></script>
