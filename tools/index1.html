@@ -1,4 +1,5 @@
 
+
 <html>
 <script>
 function capitalizeFirstLetter(string) {
@@ -121,6 +122,11 @@ function ChangeToSlug(title)
     //document.getElementById('slug').value = slug;
 	return slug
 }
+function ChangeSlipt(str,by){
+	var arra =  str.split(by);
+	return arra.join('\r\n');
+
+}
 
 
 
@@ -150,6 +156,14 @@ function getdata(type,at,e){
 			//string_out = to_slug(string_in);
 			//string_out = makeSlug(string_in);
 			string_out = ChangeToSlug(string_in);
+			
+			break;
+		case 6:
+			//string_out = to_slug(string_in);
+			//string_out = makeSlug(string_in);
+			
+			var in6_need = document.getElementById("in6_need").value;
+			string_out = ChangeSlipt(string_in,in6_need);
 			
 			break;
 		default: 
@@ -185,6 +199,18 @@ function getdata(type,at,e){
 <label>to change</label>
 <textarea id="in5">Haiz hôm nay lại thảo mai rồi</textarea>
 <textarea onclick="getdata(5,'in5',this)">haiz-hom-nay-lai-thao-mai-roi</textarea>
+
+<label>to change by split</label>
+<textarea id="in6">Haiz hôm nay lại thảo mai rồi</textarea>
+<input type="text" id="in6_need" value=" "/>
+<textarea onclick="getdata(6,'in6',this)">Haiz
+hôm
+nay
+lại
+thảo
+mai
+rồi</textarea>
+
 
 <style>
 label{display:inherit;padding-top: 22px;padding-bottom: 8px;}
