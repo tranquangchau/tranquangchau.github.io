@@ -1,0 +1,40 @@
+<h2>Get all img from string</h2>
+
+<textarea id="content" rows="5" cols="50" placeholder="input html"></textarea>
+<button onclick="getimage()">get</button>
+<br>
+<textarea id="output" rows="10" cols="50" placeholder="output link image"></textarea>
+
+<script>
+function getimage(){
+	var content = document.getElementById('content').value
+	//var urls  = getlink(content)
+	var urls  = getAttrFromString(content,'img','src')
+	console.log(urls)
+	document.getElementById('output').value = urls.join('\r\n')
+}
+
+function getlink(content){
+var m,
+    urls = [], 
+    //str = '<img src="http://site.org/one.jpg />\n <img src="http://site.org/two.jpg />',
+    str = content,
+    rex = /<img[^>]+src="http:\/\/([^">]+)/g
+	//var myRegex = /<img[^>]+src="(http:\/\/[^">]+)"/g;
+
+while ( m = rex.exec( str ) ) {
+    urls.push( m[1] );
+}
+
+//console.log( urls ); 
+return urls;
+}
+
+function getAttrFromString(str, node, attr) {
+    var regex = new RegExp('<' + node + ' .*?' + attr + '="(.*?)"', "gi"), result, res = [];
+    while ((result = regex.exec(str))) {
+        res.push(result[1]);
+    }
+    return res;
+}
+</script>
