@@ -1,0 +1,154 @@
+<html>
+<title>TextArea Tool</title>
+<meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+	<h1>TextArea Tool for text</h1>
+<textarea id="text1" rows="10" cols="50" placeholder="text1">
+   1213 Ăn bánh vẽ.sgs     dfg 222 
+
+   1213 Ăn bánh vẽ.sgs     dfg 222 
+</textarea>
+<textarea id="text2" rows="10" cols="50" placeholder="text2"></textarea>
+<button onclick="text2totext1()">text2 to text1</button>
+<br>
+<p><button onclick="chage('removeDigis')">remove number</button> 2. Ăn bánh vẽ -> . Ăn bánh vẽ</p>
+<p><button onclick="chage('replaceAll')">replaceAll</button> <input id="in1" type="text" placeholder="or"/> <input id="in2" type="text" placeholder="||"/> Geeks or Geeks -> Geeks || Geeks </p>
+<p><button onclick="chage('appen')">appen last</button> <input id="in3" type="text" placeholder="cccc"/> Geeks Geeks -> Geeks Geeks  cccc</p>
+
+<br/>
+<p><button onclick="chage('trimtext')">Formart trim</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Ăn bánh vẽ &nbsp;&nbsp;->Ăn bánh vẽ</p>
+<p><button onclick="chage('trimLine')">Formart trim Line if empty</button>  -> remove line </p>
+<p><button onclick="chage('removeMoreSpace')">Formart removeMoreSpace</button>     Ăn  &nbsp;&nbsp;&nbsp;&nbsp;  bánh &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vẽ   ->Ăn bánh vẽ</p>
+<p><button onclick="chage('ucfirstAfterDot')">Formart ucfirstAfterDot</button> Ăn cơm rồi. không đói nữa -> Ăn cơm rồi. Không đói nữa </p>
+
+<br/>
+<p><button onclick="comboText()">combo</button>  &nbsp;&nbsp;&nbsp;&nbsp;1213 Ăn bánh vẽ.sgs&nbsp;&nbsp;&nbsp;&nbsp;   dfg 222 -> Ăn bánh vẽ. Sgs dfg </p>
+
+<script>
+function chage(action){
+
+var inp = document.getElementById("text1").value;
+var oup = checkAction(inp,action)
+document.getElementById("text2").value = oup;
+}
+
+function checkAction(text,action){
+	var lines = text.split("\n");
+	var oup = ''
+	switch(action){
+		case 'removeDigis':
+			var line = [];
+			//for (var j = 0; j < lines.length; j++) {
+			  //console.log('Line ' + j + ' is ' + lines[j])
+			//  line.push(digitsBeGone(lines[j]));
+			//}
+			//oup = line.join("\n");
+			oup = digitsBeGone(text);
+			break;
+		case 'trimtext':
+			var line = [];
+			for (var j = 0; j < lines.length; j++) {
+			  line.push(trimText(lines[j]));
+			}
+			oup = line.join("\n");
+			break;
+		case 'removeMoreSpace':
+			var line = [];
+			for (var j = 0; j < lines.length; j++) {
+			  line.push(removeMoreSpace(lines[j]));
+			}
+			oup = line.join("\n");
+			break;
+		case 'ucfirstAfterDot':
+			var line = [];
+			for (var j = 0; j < lines.length; j++) {
+			  line.push(ucfirstAfterDot(lines[j]));
+			}
+			oup = line.join("\n");
+			break;
+		case 'appen':
+			var line = [];
+			var in3 = document.getElementById("in3").value;
+			for (var j = 0; j < lines.length; j++) {
+			  line.push(lines[j] +' '+in3);
+			}
+			oup = line.join("\n");
+			break;
+		case 'replaceAll':
+			var line = [];
+			var in1 = document.getElementById("in1").value;
+			var in2 = document.getElementById("in2").value;
+			var tem = '';
+			for (var j = 0; j < lines.length; j++) {
+				tem = lines[j].replaceAll(in1, in2);
+			  line.push(tem);
+			}
+			oup = line.join("\n");
+			break;
+		case 'trimLine':
+			var line = [];
+			for (var j = 0; j < lines.length; j++) {
+			  var tem = checkAction(lines[j],'trimtext')
+			  if(tem != '' && tem != ""){
+				line.push(tem);
+			  }
+			}
+			oup = line.join("\n");
+			break;
+	}
+	return oup;
+}
+
+function digitsBeGone(str){
+  return str.match(/\D/g).join('');
+}
+function comboText(){
+	var inp = document.getElementById("text1").value;
+	var oup = checkAction(inp,'removeDigis')
+	oup = checkAction(oup,'trimLine')
+	oup = checkAction(oup,'trimtext')
+	oup = checkAction(oup,'replaceAll')
+	oup = checkAction(oup,'removeMoreSpace')
+	oup = checkAction(oup,'ucfirstAfterDot')
+	oup = checkAction(oup,'appen')
+	document.getElementById("text2").value = oup;
+}
+function trimText(str){
+  return str.trim();
+}
+function removeMoreSpace(str){
+var rule=/\s{1,}/g;
+
+return str = str.split(rule).join(" "); 
+	//return str.replace(/\s/g, ' ');
+}
+function text2totext1(){
+	document.getElementById("text1").value = document.getElementById("text2").value;
+}
+function ucfirstAfterDot(str){
+	var lines = str.split(".");
+	var lineArr = [];
+	for (var j = 0; j < lines.length; j++) {
+	  var one = lines[j].trim();
+	  one = one.charAt(0).toUpperCase() + one.slice(1);
+	  lineArr.push(one);
+	}
+	return lineArr.join(". ");
+}
+
+</script>
+
+<style>
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  font-style:italic;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  font-style:italic;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  font-style:italic;
+}
+<style>
+</html>
