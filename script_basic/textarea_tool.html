@@ -11,6 +11,7 @@
 <textarea id="text2" rows="10" cols="50" placeholder="text2"></textarea>
 <button onclick="text2totext1()">text2 to text1</button>
 <br>
+<hr>
 <p><button onclick="chage('removeDigis')">remove number</button> 2. Ăn bánh vẽ -> . Ăn bánh vẽ</p>
 <p><button onclick="chage('replaceAll')">replaceAll</button> <input id="in1" type="text" placeholder="or"/> <input id="in2" type="text" placeholder="||"/> Geeks or Geeks -> Geeks || Geeks </p>
 <p><button onclick="chage('appen')">appen last</button> <input id="in3" type="text" placeholder="cccc"/> Geeks Geeks -> Geeks Geeks  cccc</p>
@@ -20,9 +21,15 @@
 <p><button onclick="chage('trimLine')">Formart trim Line if empty</button>  -> remove line </p>
 <p><button onclick="chage('removeMoreSpace')">Formart removeMoreSpace</button>     Ăn  &nbsp;&nbsp;&nbsp;&nbsp;  bánh &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vẽ   ->Ăn bánh vẽ</p>
 <p><button onclick="chage('ucfirstAfterDot')">Formart ucfirstAfterDot</button> Ăn cơm rồi. không đói nữa -> Ăn cơm rồi. Không đói nữa </p>
-
+<hr>
 <br/>
 <p><button onclick="comboText()">combo</button>  &nbsp;&nbsp;&nbsp;&nbsp;1213 Ăn bánh vẽ.sgs&nbsp;&nbsp;&nbsp;&nbsp;   dfg 222 -> Ăn bánh vẽ. Sgs dfg </p>
+<hr>
+<p><button onclick="chage('newline')">Formart newline</button> Ăn cơm rồi.\nKhông đói nữa -> </p>
+<pre>
+Ăn cơm rồi.
+Không đói nữa</pre> 
+
 
 <script>
 function chage(action){
@@ -92,6 +99,14 @@ function checkAction(text,action){
 			  if(tem != '' && tem != ""){
 				line.push(tem);
 			  }
+			}
+			oup = line.join("\n");
+			break;
+		case 'newline':
+			var line = [];
+			for (var j = 0; j < lines.length; j++) {
+				var small_line = lines[j].split("\\n");
+				line = small_line.concat(line)
 			}
 			oup = line.join("\n");
 			break;
