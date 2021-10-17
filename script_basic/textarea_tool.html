@@ -26,6 +26,7 @@
 <p><button onclick="comboText()">combo</button>  &nbsp;&nbsp;&nbsp;&nbsp;1213 Ăn bánh vẽ.sgs&nbsp;&nbsp;&nbsp;&nbsp;   dfg 222 -> Ăn bánh vẽ. Sgs dfg </p>
 <hr>
 <p><button onclick="chage('newline')">Formart newline</button> Ăn cơm rồi.\nKhông đói nữa -> </p>
+<p><button onclick="chage('removeLineWhere')">Remove Line Where</button> <input id="in4" type="text" placeholder="remove where"/> line remove -> </p>
 <pre>
 Ăn cơm rồi.
 Không đói nữa</pre> 
@@ -107,6 +108,36 @@ function checkAction(text,action){
 			for (var j = 0; j < lines.length; j++) {
 				var small_line = lines[j].split("\\n");
 				line = small_line.concat(line)
+			}
+			oup = line.join("\n");
+			break;
+		case 'removeLineWhere':
+			var line = [];
+			var strCheckc =document.getElementById("in4").value.trim();
+			console.log(strCheckc)
+			if(strCheckc ==""){
+				//alert('1')
+			}
+			for (var j = 0; j < lines.length; j++) {
+			  //var tem = checkAction(lines[j],'trimtext')
+			  var str = lines[j];
+			  
+			  var atPosition = str.lastIndexOf(strCheckc);
+			  console.log(atPosition)
+			  if(strCheckc ==""){
+			  line.push(str);
+			  break;
+			  }
+			  if(atPosition >= 0){
+				//alert('n')
+				console.log('n')
+			  }else{
+				line.push(str);
+				console.log('y')
+			  }
+			  //if(tem != '' && tem != ""){
+				//line.push(tem);
+			  //}
 			}
 			oup = line.join("\n");
 			break;
