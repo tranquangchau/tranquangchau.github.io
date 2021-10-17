@@ -114,7 +114,6 @@ function checkAction(text,action){
 		case 'removeLineWhere':
 			var line = [];
 			var strCheckc =document.getElementById("in4").value.trim();
-			console.log(strCheckc)
 			if(strCheckc ==""){
 				//alert('1')
 			}
@@ -123,21 +122,19 @@ function checkAction(text,action){
 			  var str = lines[j];
 			  
 			  var atPosition = str.lastIndexOf(strCheckc);
-			  console.log(atPosition)
 			  if(strCheckc ==""){
 			  line.push(str);
-			  break;
-			  }
+			  //break;
+			  }else{
 			  if(atPosition >= 0){
 				//alert('n')
-				console.log('n')
 			  }else{
 				line.push(str);
-				console.log('y')
 			  }
 			  //if(tem != '' && tem != ""){
 				//line.push(tem);
 			  //}
+			}
 			}
 			oup = line.join("\n");
 			break;
